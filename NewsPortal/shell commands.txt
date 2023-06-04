@@ -1,0 +1,152 @@
+from news.models import *
+
+1
+User.objects.create_user('Ivan')
+User.objects.create_user('Peter')
+
+2
+
+user1 = User.objects.get(pk=1)
+user2 = User.objects.get(pk=2)
+
+Author.objects.create(user=user1) 
+Author.objects.create(user=user2)
+
+
+3
+
+Category.objects.create(name = 'Films')
+
+Category.objects.create(name = 'Music')
+
+Category.objects.create(name = 'Books')
+
+Category.objects.create(name = 'Science')
+
+
+
+4
+
+news_text1 ="""Равным образом сложившаяся структура организации способствует подготовке и реализации существующих финансовых и административных усло
+вий. С другой стороны реализация намеченного плана развития представляет собой интересный эксперимент проверки направлений прогрессивного развития. Знач
+имость этих проблем настолько очевидна, что повышение уровня гражданского сознания требует определения и уточнения всесторонне сбалансированных нововведений."""
+
+author1 = Author.objects.get(pk=1)
+
+Post.objects.create(type=news, title='Заголовок первой новости', text=news_text1, author=author1)                             
+
+
+
+article_text1 = """Практический опыт показывает, что сложившаяся структура организации играет важную роль в формировании соответствующих условий акт
+ивизации. Задача организации, в особенности же начало повседневной работы по формированию позиции в значительной степени обуславливает создание дальнейш
+их направлений развитая системы массового участия. Разнообразный и богатый опыт постоянный количественный рост и сфера нашей активности требует от нас системного анализа позиций, занимаемых участниками в отношении поставленных задач."""
+
+author2 = Author.objects.get(pk=2)
+
+Post.objects.create(type=article, title='Заголовок первой статьи', text=article_text1, author=author2)                                              
+
+
+article_text2 = """Соображения высшего порядка, а также постоянный количественный рост и сфера нашей активности играет важную роль в формировании позиций, занимаемых участниками в отношении поставленных задач. Равным образом социально-экономическое развитие способствует подготовке и реализации существующих финансовых и административных условий? Практический опыт показывает, что реализация намеченного плана развития играет важную роль в формировании соответствующих условий активизации."""                                             
+
+Post.objects.create(type=article, title='Заголовок второй статьи', text=article_text2, author=author1)                                             
+
+
+
+
+5 
+
+cat1 = Category.objects.get(pk=1)
+cat2 = Category.objects.get(pk=2)
+cat3 = Category.objects.get(pk=3)
+cat4 = Category.objects.get(pk=4)
+
+
+news1 = Post.objects.get(pk=1)
+article1 = Post.objects.get(pk=2)
+article2 = Post.objects.get(pk=3)
+
+
+news1.categories.add(cat1, cat4) 
+article1.categories.add(cat1, cat2)
+article2.categories.add(cat3, cat4) 
+
+
+6
+
+comment1 = 'Какую пользу это несет?'
+comment2 = 'Автор жжет!'
+comment3 = 'Цой жив!'
+comment4 = 'Оставляю комментарий ради комментария...' 
+
+
+
+Comment.objects.create(text=comment1, post=news1, user=user2)
+Comment.objects.create(text=comment2, post=article1, user=user1)
+Comment.objects.create(text=comment3, post=article2, user=user2)
+Comment.objects.create(text=comment4, post=article1, user=user2)
+
+
+
+
+7
+
+news1.like()
+news1.like()
+news1.like()
+news1.like()
+news1.like()
+news1.like()
+news1.dislike()
+news1.dislike()
+
+
+article1.dislike()
+article1.dislike()
+article1.dislike()
+article1.dislike()
+article1.dislike()
+
+
+article2.like()
+article2.dislike()
+article2.like()
+article2.dislike()
+article2.like()
+article2.like()
+
+
+comment1=Comment.objects.get(pk=1)
+comment2=Comment.objects.get(pk=2)
+comment3=Comment.objects.get(pk=3)
+comment4=Comment.objects.get(pk=4)
+
+comment1.like()
+comment2.dislike()
+comment2.dislike()
+comment3.like()
+comment3.like()
+comment3.like()
+
+8
+
+author1.update_rating()
+author2.update_rating()
+
+9
+Вывести username и рейтинг лучшего пользователя (применяя сортировку и возвращая поля первого объекта).
+
+User.objects.all().order_by('-author__rating').values('username', 'author__rating')[0]
+
+10
+Вывести дату добавления, username автора, рейтинг, заголовок и превью лучшей статьи, основываясь на лайках/дислайках к этой статье.
+
+best_post = Post.objects.all().order_by('-rating')[0]
+
+
+11
+Вывести все комментарии (дата, пользователь, рейтинг, текст) к этой статье.
+
+
+Post.objects.all().order_by('-rating').values('created_on__date', 'author__user__username', 'rating', 'title')[0]
+
+
